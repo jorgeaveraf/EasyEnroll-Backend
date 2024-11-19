@@ -57,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'modulo_secundaria.urls'
@@ -137,6 +138,8 @@ GRAPHENE = {
     'SCHEMA': 'modulo_secundaria.schema.schema',
         'MIDDLEWARE': [
         'graphql_jwt.middleware.JSONWebTokenMiddleware',
+        'easyenroll.utils.firebase_middleware.FirebaseAuthMiddleware',
+        
     ],
 }
 
