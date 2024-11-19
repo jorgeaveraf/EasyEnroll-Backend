@@ -8,6 +8,7 @@ from django.db.models import Q
 import re
 from datetime import date, datetime
 from graphql import GraphQLError
+from easyenroll.utils.captcha_utils import verify_recaptcha
 
 def validate_email(email):
     if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
@@ -154,8 +155,12 @@ class CreateAlumno(graphene.Mutation):
         sexo = graphene.String(required=True)
         escuela_procedencia = graphene.String(required=True)
         grado_grupo_asignado = graphene.String(required=True)
+        recaptcha_token = graphene.String(required=True)
 
-    def mutate(self, info, nombre, apellido_paterno, apellido_materno, correo_institucional, curp, sexo, escuela_procedencia, grado_grupo_asignado):
+    def mutate(self, info, nombre, apellido_paterno, apellido_materno, correo_institucional, curp, sexo, escuela_procedencia, grado_grupo_asignado, recaptcha_token):
+        if not verify_recaptcha(recaptcha_token):
+            raise GraphQLError("Invalid reCAPTCHA token")
+
         if len(nombre) > 100:
             raise GraphQLError("El nombre es demasiado largo")
         if len(apellido_paterno) > 100:
